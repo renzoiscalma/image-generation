@@ -12,6 +12,19 @@ export default function Home() {
     setUrl(val);
   };
 
+  const handlQrUrlInputChange = (event: React.FormEvent) => {
+    const val = (event.target as HTMLInputElement).value;
+    let fileImage = new Image();
+    fileImage.crossOrigin = "anonymous";
+    fileImage.src = val;
+    fileImage.onload = function () {
+      setQrImg(fileImage);
+    };
+    fileImage.onerror = function () {
+      console.log(new Error("Could not load image at " + val));
+    };
+  };
+
   const handleImgChange = (event: React.FormEvent) => {
     const files = (event.target as HTMLInputElement).files;
     let fileImage = new Image();
@@ -35,7 +48,6 @@ export default function Home() {
 
         let qrSize = 300;
         ctx.drawImage(qrImg, 350, 460, qrSize, qrSize);
-
         ctx.font = "bold 24px Arial";
         ctx.textAlign = "center";
         ctx.fillText(url, canvas.width / 2, 850);
@@ -60,6 +72,9 @@ export default function Home() {
           accept="image/png, image/jpeg"
           onChange={handleImgChange}
         />
+      </div>
+      <div>
+        Input QR Img Url: <input type="text" onChange={handlQrUrlInputChange} />
       </div>
       <div>
         <input type="button" onClick={downloadCanvas} value="download" />
